@@ -445,6 +445,7 @@ class ParticleFilter:
         predicted_measurements = self._sense(pose=particle)
         rays = range(0, 240, 240 // 8)
         subsampled_measurements = [measurements[i] for i in rays]
+        
         for measurement, predicted_measurement in zip(
             subsampled_measurements, predicted_measurements
         ):

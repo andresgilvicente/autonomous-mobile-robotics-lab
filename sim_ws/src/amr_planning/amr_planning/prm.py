@@ -65,16 +65,6 @@ class PRM:
             use_regions=False,
             safety_distance=obstacle_safety_distance,
         )
-        #############################################################
-        """
-        self._map: Map = Map(
-            map_path,
-            sensor_range=sensor_range_max,
-            safety_distance=obstacle_safety_distance,
-            compiled_intersect=False,
-            use_regions=False,
-        )
-        """
 
         self._graph: dict[tuple[float, float], list[tuple[float, float]]] = self._create_graph(
             use_grid,
@@ -189,20 +179,20 @@ class PRM:
         # TODO: 4.5. Complete the function body (i.e., load smoothed_path).
 
         ### Add additional points
-        if additional_smoothing_points > 0:
+        if additional_smoothing_points > 0: # solo añado si esto es más que cero
             new_path = []
-            for i in range(len(path) - 1):
+            for i in range(len(path) - 1):  # cojo parejas de puntos para insertar entre medias
                 p_i = path[i]
-                p_next = path[i + 1]
+                p_next = path[i + 1]  # este lo añadiremos en la iteración siguiente
 
                 new_path.append(p_i)
 
-                vector = np.array(p_next) - np.array(p_i)
+                vector = np.array(p_next) - np.array(p_i)  # me permite saber la distancia y sentido entre ellos
 
-                for j in range(1, additional_smoothing_points + 1):
+                for j in range(1, additional_smoothing_points + 1):  # voy dando steps (cada j es un step)
                     intermediate_point = (
-                        p_i[0] + vector[0] * j / (additional_smoothing_points + 1),
-                        p_i[1] + vector[1] * j / (additional_smoothing_points + 1),
+                        p_i[0] + vector[0] * j / (additional_smoothing_points + 1),  # la x
+                        p_i[1] + vector[1] * j / (additional_smoothing_points + 1),  # la y
                     )
                     new_path.append(intermediate_point)
 
@@ -214,19 +204,19 @@ class PRM:
         s = np.array(path)
 
         while True:
-            s_anterior = np.copy(s)
-            smoothed_path: list[tuple[float, float]] = [s[0]]
-            for i in range(1, len(path) - 1):
+            s_anterior = np.copy(s)  # necesario para la comparación 
+            smoothed_path: list[tuple[float, float]] = [s[0]]  # metemos el inicial (que no se smoothea)
+            for i in range(1, len(path) - 1):  # no quiero ni coger el primero i=0, ni el ultimo i=len(path)-1
                 p_i = path[i]
 
                 s[i] = (
                     s[i]
                     + data_weight * (np.array(p_i) - np.array(s[i]))
-                    + smooth_weight * (s[i + 1] + s[i - 1] - 2 * s[i])
+                    + smooth_weight * (s[i + 1] + s[i - 1] - 2 * s[i])  # formula del smoothing
                 )
                 smoothed_path.append(s[i])
 
-            if np.sum(np.abs(s_anterior - s)) < tolerance:
+            if np.sum(np.abs(s_anterior - s)) < tolerance:  # condicion de parada del smoothing
                 smoothed_path.append(s[-1])
                 return smoothed_path
 
@@ -355,7 +345,7 @@ class PRM:
             for other_node in graph.keys():
                 if node != other_node:
                     distance = np.linalg.norm(np.array(node) - np.array(other_node))
-                    if (  # Change for cross
+                    if (
                         distance <= connection_distance
                         and not self._map.crosses([node, other_node])
                     ):

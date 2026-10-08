@@ -208,25 +208,27 @@ class PRM:
 
             path = new_path
 
-        smoothed_path: list[tuple[float, float]] = []
-        s = np.array(path)
+        # 2) p = path original, s = path suavizado
+        p = np.array(path, dtype=float)
+        s = np.copy(p)
 
+        # 3) Suavizado iterativo
         while True:
-            s_anterior = np.copy(s)
-            smoothed_path: list[tuple[float, float]] = [s[0]]
-            for i in range(1, len(path) - 1):
-                p_i = path[i]
+            s_previous = np.copy(s)
 
-                s[i] = (
-                    s[i]
-                    + data_weight * (np.array(p_i) - np.array(s[i]))
-                    + smooth_weight * (s[i + 1] + s[i - 1] - 2 * s[i])
-                )
-                smoothed_path.append(s[i])
+            for i in range(1, len(s) - 1):
+                s[i] += data_weight * (p[i] - s[i])
+                s[i] += smooth_weight * (s[i + 1] + s[i - 1] - 2 * s[i])
 
-            if np.sum(np.abs(s_anterior - s)) < tolerance:
-                smoothed_path.append(s[-1])
-                return smoothed_path
+            change = np.sum(np.abs(s_previous - s))
+
+            if change < tolerance:
+                break
+
+        # 4) Convertir de nuevo a lista de tuplas
+        smoothed_path = [tuple(point) for point in s]
+
+        return smoothed_path
 
     def plot(
         self,

@@ -103,10 +103,14 @@ class ParticleFilterNode(LifecycleNode):
             self._predicted_x = 0.0
             self._predicted_y = 0.0
             self._predicted_theta = 0.0
+            
+            
             ############
             map_path = os.path.realpath(
                 os.path.join(os.path.dirname(__file__), "..", "maps", world + ".json")
             )
+
+
             self._particle_filter = ParticleFilter(
                 self.dt,
                 map_path,
@@ -124,6 +128,9 @@ class ParticleFilterNode(LifecycleNode):
             if self._enable_plot:
                 self._particle_filter.show("Initialization", save_figure=True)
 
+
+
+
             # Publishers
             # TODO: 3.1. Create the /pose publisher (PoseStamped message).
             self._pose_publisher = self.create_publisher(PoseStamped, "pose", 10)
@@ -135,21 +142,6 @@ class ParticleFilterNode(LifecycleNode):
                 reliability=QoSReliabilityPolicy.BEST_EFFORT,
                 durability=QoSDurabilityPolicy.VOLATILE,
             )
-
-            # #self._subscribers: list[message_filters.Subscriber] = []
-            # self._subscribers.append(
-            #     message_filters.Subscriber(self, Odometry, "odometry")
-            # )
-            # self._subscribers.append(
-            #     message_filters.Subscriber(
-            #         self, LaserScan, "scan", qos_profile=scan_qos_profile
-            #     )
-            # )
-
-            # ts = message_filters.ApproximateTimeSynchronizer(
-            #     self._subscribers, queue_size=10, slop=9
-            # )
-            # ts.registerCallback(self._compute_pose_callback)
 
             self._scan_subscriber = self.create_subscription(
                 LaserScan, "scan", self._callback_scan_saving_history, scan_qos_profile
@@ -163,6 +155,7 @@ class ParticleFilterNode(LifecycleNode):
             self._stop_publisher = self.create_publisher(
                 ControlStop, "stop_condition", 10
             )
+            
 
             self._timer = self.create_timer(2.0, self._timer_callback)
 

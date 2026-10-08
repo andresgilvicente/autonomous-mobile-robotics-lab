@@ -64,10 +64,15 @@ class ParticleFilterNode(LifecycleNode):
                 .get_parameter_value()
                 .double_array_value.tolist()
             )
+
+            
             particles = self.get_parameter("particles").get_parameter_value().integer_value
             sigma_v = self.get_parameter("sigma_v").get_parameter_value().double_value
             sigma_w = self.get_parameter("sigma_w").get_parameter_value().double_value
             sigma_z = self.get_parameter("sigma_z").get_parameter_value().double_value
+
+
+
             self._steps_btw_sense_updates = (
                 self.get_parameter("steps_btw_sense_updates").get_parameter_value().integer_value
             )

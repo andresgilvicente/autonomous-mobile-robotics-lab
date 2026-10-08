@@ -127,9 +127,6 @@ class WallFollowerNode(LifecycleNode):
                 self._timer = self.create_timer(dt, self._timer_callback)
             else:
                 ts.registerCallback(self._compute_commands_callback)
-
-
-            # TODO: 4.12. Add /pose to the synced subscriptions only if localization is enabled.
             
             # Create 3.11.2 Subscriber for the personalized topic
             self._personalized_subscriber = self.create_subscription(
