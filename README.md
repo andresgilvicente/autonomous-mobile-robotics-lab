@@ -6,6 +6,8 @@
 
 End-to-end autonomous navigation for a differential-drive mobile robot: localization, planning and control on ROS 2.
 
+**Development period:** January–May 2026
+
 ![ROS 2](https://img.shields.io/badge/ROS%202-Humble-22314E?logo=ros&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.10-3776AB?logo=python&logoColor=white)
 ![CoppeliaSim](https://img.shields.io/badge/Simulator-CoppeliaSim-2E8BC0)
